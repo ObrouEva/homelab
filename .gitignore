@@ -1,0 +1,13 @@
+# Never commit secrets
+.env
+.env.*
+*.key
+*.pem
+*.p12
+id_rsa*
+id_ed25519*
+*credentials*
+*secret*
+
+# OS junk
+.DS_Store
