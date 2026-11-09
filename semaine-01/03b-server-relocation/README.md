@@ -63,14 +63,14 @@ round-trip min/avg/max/stddev = 15.703/26.278/52.759/15.337 ms
 |---|---|
 | ![Desk before](screenshots/desk-before.jpg) | ![Desk after](screenshots/desk-after.jpg) |
 
-After tidying, the Ethernet cable runs behind the server instead of over it. There is free space behind for hot-air exhaust, and the front intake is unobstructed.
+Before: cables tangled around the server and power brick. After: cables grouped at the power strip, the Ethernet cable runs behind the server, there is free space behind for hot-air exhaust, and the front intake is unobstructed.
 
 ## Problems & fixes
 | Problem | Fix |
 |---|---|
 | Old power strip was buzzing | Discarded it. A buzzing strip is a fire hazard |
 | Unsure whether WPS was needed to pair the extender | Not needed: the Tether app paired it using the Wi-Fi password |
-| Ethernet cable coiled on top of the server | Routed it behind the server so it can't be pulled by accident |
+| Cables tangled around the server and power brick | Grouped cables at the strip; routed Ethernet behind the server so it can't be pulled by accident |
 
 ## To watch next
 Some Wi-Fi extenders rewrite the MAC addresses of devices behind their Ethernet port. In **project 04**, I'll check that a VM on `vmbr0`, which has its own MAC, still gets a DHCP lease and internet access.
