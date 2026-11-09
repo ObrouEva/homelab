@@ -7,9 +7,10 @@
 | [01](01-hardware-inventory/) | Hardware inventory | Exact specs confirmed before wiping Windows; upgrade path planned |
 | [02](02-proxmox-install/) | Proxmox VE install | BIOS prepared, ISO verified, Proxmox 9.2 installed with a static IP |
 | [03](03-proxmox-administration/) | Proxmox administration | Web UI explored, update repositories fixed, 212 packages upgraded, new kernel booted |
+| [03b](03b-server-relocation/) | Server relocation | Moved behind a Wi-Fi extender (layer-2 bridge): same static IP, verified with ping/TTL |
 
 ## Skills practised
-BIOS/UEFI · hardware virtualisation (VT-x / VT-d) · type-1 hypervisor · ISO integrity (SHA256) · static IP addressing · Linux package management (APT) · reading logs and error codes · kernel updates
+BIOS/UEFI · hardware virtualisation (VT-x / VT-d) · type-1 hypervisor · ISO integrity (SHA256) · static IP addressing · Linux package management (APT) · reading logs and error codes · kernel updates · layer-2 bridging vs routing · TTL analysis · safe shutdown & power hygiene
 
 ## Key lessons
 1. **Always verify what you download.** My first ISO download failed its SHA256 check — I re-downloaded instead of installing a file I couldn't trust.

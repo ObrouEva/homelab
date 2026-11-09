@@ -14,7 +14,7 @@ I'm a first-year Maths & Computer Science student (Université Lyon 1). This rep
 | CPU | Intel Core i5-8600T — 6 cores / 6 threads, up to 3.7 GHz, 35 W |
 | RAM | 8 GB DDR4 (1 free slot — upgrade path to 32 GB) |
 | Storage | 256 GB NVMe SSD (free 2.5" bay for a future data disk) |
-| Network | 1 GbE Intel I219-LM |
+| Network | 1 GbE Intel I219-LM, connected via a TP-Link RE330 Wi-Fi extender |
 | Hypervisor | Proxmox VE 9.2 (Debian 13 "Trixie", kernel 7.0) |
 | Admin workstation | MacBook Air M3 |
 
@@ -23,7 +23,8 @@ I'm a first-year Maths & Computer Science student (Université Lyon 1). This rep
 ```mermaid
 flowchart LR
     Internet((Internet)) --- Box[Freebox Pop<br/>192.168.1.X]
-    Box --- PVE[Proxmox VE host<br/>pve.homelab.lan<br/>192.168.1.X]
+    Box -. Wi-Fi .- RE[Wi-Fi extender<br/>TP-Link RE330]
+    RE --- PVE[Proxmox VE host<br/>pve.homelab.lan<br/>192.168.1.X]
     Box -. Wi-Fi .- Mac[MacBook Air M3<br/>admin workstation]
     Mac -- "HTTPS :8006" --> PVE
 ```
@@ -36,7 +37,7 @@ flowchart LR
 
 | Week | Projects | Status |
 |---|---|---|
-| [01 — Know your server & Proxmox](semaine-01/) | 01 Hardware inventory · 02 Proxmox install · 03 Proxmox administration | ✅ Done |
+| [01 — Know your server & Proxmox](semaine-01/) | 01 Hardware inventory · 02 Proxmox install · 03 Proxmox administration · 03b Server relocation | ✅ Done |
 | 02 — Virtual machines | 04 Debian VM · 05 Second Linux VM · 06 Snapshots | ⏳ Next |
 | 03 — Linux command line | 07 File structure · 08 Users & permissions · 09 First Bash script | 🔜 |
 | 04 — Remote administration | 10 SSH keys · 11 Services & logs · 12 Automated maintenance | 🔜 |
