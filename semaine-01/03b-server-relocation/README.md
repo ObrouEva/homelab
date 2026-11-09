@@ -61,7 +61,7 @@ round-trip min/avg/max/stddev = 15.703/26.278/52.759/15.337 ms
 
 | Before tidying | After tidying |
 |---|---|
-| ![Desk before](screenshots/desk-before.jpg) | ![Desk after](screenshots/desk-after.jpg) |
+| ![Desk before](screenshots/desk-before-tidying.jpg) | ![Desk after](screenshots/desk-after-tidying.jpg) |
 
 Before: cables tangled around the server and power brick. After: cables grouped at the power strip, the Ethernet cable runs behind the server, there is free space behind for hot-air exhaust, and the front intake is unobstructed.
 
