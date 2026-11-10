@@ -68,12 +68,17 @@ systemctl status qemu-guest-agent   # active (running)
 ```
 
 ## Screenshots
-| | |
+| Step | Screenshot |
 |---|---|
+| Host baseline before any VM: `free -h` (1.6 GiB used, swap 0) | ![free -h baseline](screenshots/04-host-free-baseline.png) |
+| Host baseline in the GUI: RAM 1.61 / 7.55 GiB, KSM 0 B | ![Host summary](screenshots/05-host-summary-baseline.png) |
 | ISO checksum verified by Proxmox on upload | ![ISO upload](screenshots/00-iso-upload-checksum.png) |
 | VM configuration before creation | ![Config](screenshots/01-vm-config-confirm.png) |
-| Partition summary (LVM) | ![Partitions](screenshots/02-partition-summary.jpg) |
-| VM running with Guest Agent (IPs blurred) | ![Summary](screenshots/03-vm-summary-guest-agent.png) |
+| VM 100 created (stopped, 0 B host memory) | ![VM created](screenshots/06-vm-created-stopped.png) |
+| First start: the installer uses ~396 MiB of host RAM, and the agent isn't installed yet | ![First start](screenshots/07-vm-first-start.png) |
+| Partition summary (LVM, `debian-01-vg`) | ![Partitions](screenshots/02-partition-summary.jpg) |
+| First login and checks: `hostname -f`, `ip -br a`, `sudo apt update` (IPs blurred) | ![First login](screenshots/08-first-login-checks.png) |
+| VM running with Guest Agent reporting IPs (blurred) | ![Summary](screenshots/03-vm-summary-guest-agent.png) |
 
 ## Tests
 | Test | Result |
