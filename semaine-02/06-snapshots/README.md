@@ -101,7 +101,10 @@ Snapshot removed in Proxmox (Snapshots → Remove), then `lvs` on the host again
 ## Screenshots
 | Step | Screenshot |
 |---|---|
+| Witness file created before the snapshot | ![Witness](screenshots/00-witness-file.png) |
 | Snapshot taken: freeze → LV created → thaw | ![Snapshot](screenshots/01-snapshot-taken.png) |
+| Snapshot tree: `before-break` → `NOW` ("You are here!") | ![Tree](screenshots/01b-snapshot-tree.png) |
+| `lvs` right after the snapshot: new LV with `Origin vm-100-disk-0`, pool still 1.62 % (nothing copied) | ![lvs after snapshot](screenshots/01c-lvs-right-after-snapshot.png) |
 | `lvs` before and after writing 1 GiB | ![lvs](screenshots/02-lvs-before-after-write.png) |
 | Broken VM: `grub rescue>` | ![Broken](screenshots/03-broken-grub-rescue.png) |
 | After rollback: boots to login | ![Rollback](screenshots/04-after-rollback-login.png) |
