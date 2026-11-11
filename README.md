@@ -39,7 +39,7 @@ flowchart LR
 | Week | Projects | Status |
 |---|---|---|
 | [01 — Know your server & Proxmox](semaine-01/) | 01 Hardware inventory · 02 Proxmox install · 03 Proxmox administration · 03b Server relocation | ✅ Done |
-| [02 — Virtual machines](semaine-02/) | 04 Debian VM ✅ · 05 Second Linux VM · 06 Snapshots | 🔄 In progress |
+| [02 — Virtual machines](semaine-02/) | 04 Debian VM ✅ · 05 Second Linux VM · 06 Snapshots ✅ | 🔄 In progress |
 | 03 — Linux command line | 07 File structure · 08 Users & permissions · 09 First Bash script | 🔜 |
 | 04 — Remote administration | 10 SSH keys · 11 Services & logs · 12 Automated maintenance | 🔜 |
 | 05 — Linux networking | 13 Network map · 14 VM-to-VM · 15 Isolated network | 🔜 |
