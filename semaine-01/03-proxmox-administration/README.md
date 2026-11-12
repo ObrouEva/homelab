@@ -76,4 +76,15 @@ No unattended upgrades on the hypervisor: if an update breaks it, every VM goes 
 - **CVE** = the public ID of a known vulnerability. Updating is mostly about closing CVEs.
 
 ## Screenshots
-`screenshots/` — repositories before/after, `apt update` before/after, `uname -r` before/after reboot.
+Browser address bar cropped (it shows the server's IP).
+
+| | |
+|---|---|
+| Datacenter summary: one node, no VMs yet | ![Datacenter](screenshots/01-datacenter-summary.png) |
+| Node summary: idle baseline | ![Node](screenshots/02-node-summary.png) |
+| System services (`pveproxy`, `pvedaemon`, `chrony`…) | ![Services](screenshots/03-services.png) |
+| The recurring error: `apt-get update` failed, exit code 100 | ![Task error](screenshots/04-task-error-exit-100.png) |
+| Repositories before: enterprise repos enabled without a subscription | ![Repos before](screenshots/05-repositories-before.png) |
+| Enterprise repos disabled, nothing to update from yet (error) | ![Enterprise disabled](screenshots/06-repositories-enterprise-disabled.png) |
+| `pve-no-subscription` added: updates available | ![Repos after](screenshots/07-repositories-after.png) |
+| Full upgrade in the node shell | ![Upgrade](screenshots/08-upgrade-output.png) |

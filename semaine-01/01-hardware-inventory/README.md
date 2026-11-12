@@ -39,4 +39,13 @@ Get-PhysicalDisk                       # disk model and bus type
 | `shutdown /r /fw` failed (error 203) | This firmware doesn't support "reboot to UEFI" from Windows → manual F2 after a restart |
 
 ## Screenshots
-`screenshots/` — PowerShell output, BIOS virtualisation and SATA pages. Service tag and serial numbers removed.
+Service tag blurred, EXIF/GPS metadata stripped from every photo.
+
+| | |
+|---|---|
+| Unboxing: Dell OptiPlex 7060 Micro, power brick, cables, USB key | ![Unboxing](screenshots/01-unboxing.jpg) |
+| Front | ![Front](screenshots/02-front.jpg) |
+| Rear ports: RJ45, 4 × USB-A, VGA, 2 × DisplayPort, **no HDMI** (service tag blurred) | ![Rear](screenshots/03-rear-ports.jpg) |
+| Inventory from Windows before wiping it: CPU, RAM (`Get-CimInstance`), NVMe disk (`Get-PhysicalDisk`), and a failed `shutdown /r /fw` attempt | ![PowerShell](screenshots/04-powershell-inventory.jpg) |
+| BIOS: SATA Operation set to **AHCI** | ![SATA AHCI](screenshots/05-bios-sata-ahci.jpg) |
+| BIOS: AC Recovery set to **Power On** (server restarts after a power cut) | ![AC Recovery](screenshots/06-bios-ac-recovery.jpg) |

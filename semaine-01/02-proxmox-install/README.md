@@ -60,4 +60,11 @@ ping -c 4 192.168.1.X
 A checksum is the only way to know a file is exactly what the publisher released — size alone proves nothing. And a static IP for a server must sit outside the DHCP range, or the router may hand the same address to another device.
 
 ## Screenshots
-`screenshots/` — installer summary, first login, dashboard.
+Installer summary and network screens are not published: they show my email and real IP addresses.
+
+| | |
+|---|---|
+| Official download page with the published **SHA256** | ![ISO download](screenshots/01-iso-download-sha256.png) |
+| Flashing the ISO to the USB key with balenaEtcher | ![Etcher](screenshots/02-etcher-flashing.png) |
+| Flash completed | ![Flash complete](screenshots/03-etcher-flash-complete.png) |
+| Proxmox installer boot menu on the Dell | ![Installer](screenshots/04-installer-welcome.jpg) |
