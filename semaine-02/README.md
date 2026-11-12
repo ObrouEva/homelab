@@ -5,7 +5,7 @@
 | # | Project | Result |
 |---|---|---|
 | [04](04-debian-vm/) | Debian Server VM | Headless Debian 13 (2 vCPU / 2 GiB / 20 GiB LVM), DHCP behind the Wi-Fi extender, sudo-only admin, Guest Agent working |
-| 05 | Second Linux VM | ⏳ |
+| [05](05-ubuntu-server-vm/) | Second Linux VM: Ubuntu Server | 🚧 In progress |
 | [06](06-snapshots/) | Snapshots | Took a snapshot, made the VM unbootable (`rm -rf /boot/*`), rolled back in one click, measured copy-on-write with `lvs` |
 
 ## Skills practised
