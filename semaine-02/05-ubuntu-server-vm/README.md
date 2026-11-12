@@ -123,6 +123,10 @@ timedatectl                                      # after: Local time 14:30 CET, 
 
 Only the **display** changed: `Universal time` and the NTP-synchronised clock stayed the same. After reconnecting, the prompt shows `eva@ubuntu-01`.
 
+Result: Proxmox now reads the VM's IPs through the agent. VM cost on the host: **1.37 GiB** for 824 MiB used inside the guest.
+
+![Summary with Guest Agent (IPs blurred)](screenshots/07-summary-guest-agent.png)
+
 ### 6. Updates
 ```bash
 sudo apt update && sudo apt full-upgrade   # 48 packages upgraded
@@ -137,9 +141,6 @@ Same `apt` commands as Debian (the shared family), but Ubuntu adds its own behav
 
 ![autoremove of the old kernel](screenshots/08-autoremove-old-kernel.png)
 
-Result: Proxmox now reads the VM's IPs through the agent. VM cost on the host: **1.37 GiB** for 824 MiB used inside the guest.
-
-![Summary with Guest Agent (IPs blurred)](screenshots/07-summary-guest-agent.png)
 
 ## Problems & fixes
 | Problem | Cause | Fix / lesson |
