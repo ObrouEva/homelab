@@ -61,6 +61,14 @@ Same hardware as the Debian VM, so the comparison is fair: 2 vCPU, 2 GiB RAM, 20
 
 ![VM 101 configuration](screenshots/03-vm-config-confirm.png)
 
+### 3. Install with Subiquity
+First visible differences from Debian's installer: an orange header, **[ Done ] / [ Back ]** buttons on every screen, and no 30-second boot-menu trap (GRUB starts the live system by itself).
+
+- **Keyboard:** the default was English (UK). Changed to **French / French** (PC variant, because the Proxmox console sends PC key positions).
+- **Network:** Subiquity **shows the network result directly** (Debian's installer didn't): `ens18` got a DHCPv4 lease in `192.168.1.X/24`, a public DHCPv6 address, and a MAC starting `BC:24:11` (Proxmox prefix, "Red Hat, Inc. / Virtio network device"). Second confirmation that VMs get their own lease **behind the Wi-Fi extender**.
+
+![Subiquity network step (addresses blurred)](screenshots/04-installer-network-dhcp.png)
+
 ## Problems & fixes
 | Problem | Cause | Fix / lesson |
 |---|---|---|
