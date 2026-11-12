@@ -69,6 +69,20 @@ First visible differences from Debian's installer: an orange header, **[ Done ] 
 
 ![Subiquity network step (addresses blurred)](screenshots/04-installer-network-dhcp.png)
 
+- **Mirror:** the log starts with `file:/cdrom resolute Release`. The installer uses **the ISO itself as a package source** and only fetches update indexes from `archive.ubuntu.com` (274 kB). That's the live-server vs netinst difference, visible in the log.
+- **Storage:** guided, entire disk + LVM, no encryption. The summary shows a classic Ubuntu surprise:
+
+| | Debian `debian-01` | Ubuntu `ubuntu-01` |
+|---|---|---|
+| Volume group name | `debian-01-vg` (from the hostname) | `ubuntu-vg` (fixed name) |
+| `/boot` | ~1 GB partition | 1.77 GB partition |
+| Root `/` | **19.3 GB**: the whole VG | **10 GB** only, **8.2 GB left free** in the VG |
+| Swap | `swap_1` logical volume | No swap volume (Ubuntu uses a **swap file** instead) |
+
+Ubuntu deliberately leaves part of the volume group unallocated, so the admin can later decide which volume grows. That's the LVM flexibility discussed in project 04. I kept the default and will extend `/` myself after the install (`lvextend`), as a real admin task.
+
+![Ubuntu storage summary](screenshots/05-storage-summary.png)
+
 ## Problems & fixes
 | Problem | Cause | Fix / lesson |
 |---|---|---|
