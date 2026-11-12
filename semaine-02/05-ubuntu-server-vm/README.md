@@ -91,10 +91,16 @@ Ubuntu deliberately leaves part of the volume group unallocated, so the admin ca
 
 ![Installation complete](screenshots/06-install-complete.png)
 
+### 4. First boot
+- At *"Please remove the installation medium"*: pressed Enter, then ejected the ISO afterwards (**Hardware → CD/DVD → Do not use any media**, applied live). No boot problem this time: a new VM's boot order is already **disk first**.
+- At first boot, **cloud-init** generates the SSH host keys (RSA, ECDSA, ED25519) and prints their fingerprints on the console, the reference to compare against at the first SSH connection.
+- The login banner (MOTD) already shows a lot: `/` used at **50.6 % of 9.75 GB** (confirms the small root volume), **45 updates** available, an Ubuntu Pro/ESM reminder, the IPv4/IPv6 addresses, and times in **UTC**: the installer never asked for a timezone, unlike Debian's.
+
 ## Problems & fixes
 | Problem | Cause | Fix / lesson |
 |---|---|---|
 | The ISO also started downloading **on my Mac** | I clicked the ISO link on the Ubuntu page | Cancelled it. Proxmox downloads its own copy; only the hash needs to be copied from the site |
 | Typed `SHA256SUMS` in the Checksum field | Confused the **name** of the hash list with the **hash** itself | Opened `SHA256SUMS` and copied the 64-character hex string. Caught before downloading 2.7 GB for nothing |
 | Wizard showed Qemu Agent ❌, disk **32 GiB**, Discard ❌, SSD ❌, **1 core** | I assumed the wizard **remembered my Debian settings**. It doesn't: every new VM starts from Proxmox defaults | Went back through each tab and fixed 5 values before Finish. Lesson: manual setup drifts. That's why admins use **templates** and **automation** (Terraform, Phase 4) |
+| Hostname came out as **`ubuntu-06`** instead of `ubuntu-01` | AZERTY again: on a **PC** AZERTY layout, digits need Shift, and the `6` key types `-`, so one key press landed on the wrong character in the console | Fixed after install over SSH (`hostnamectl`), from the Mac keyboard. Unlike Debian, the VG name doesn't depend on the hostname (`ubuntu-vg`), so the fix is easy |
 | Two `live-server` lines in `SHA256SUMS` | The folder holds **26.04** (April) and **26.04.1** (August) | Took the `26.04.1` line, matching the file I'm downloading, and copied it from the official page myself, never from a third party |
