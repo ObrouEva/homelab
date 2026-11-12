@@ -72,6 +72,19 @@ Before: cables tangled around the server and power brick. After: cables grouped 
 | Unsure whether WPS was needed to pair the extender | Not needed: the Tether app paired it using the Wi-Fi password |
 | Cables tangled around the server and power brick | Grouped cables at the strip; routed Ethernet behind the server so it can't be pulled by accident |
 
+## Follow-up (2026-11-12): what the extender sees
+The TP-Link Tether app lists the extender's clients. With both VMs running:
+
+| Extender status | Clients |
+|---|---|
+| ![Tether status](screenshots/tether-status.png) | ![Tether clients](screenshots/tether-clients.png) |
+
+- **Wired (3):** `debian-01`, `ubuntu-01` and one `ANONYMOUS` device, which is the **Proxmox host** itself. The VMs announce their hostname when they request a DHCP lease; the host has a static IP and never asks, so the extender has no name for it.
+- So the Dell's single Ethernet cable carries **three devices**, each with its own MAC address, through the Linux bridge `vmbr0`. The extender tracks each one separately.
+- **5 GHz (2):** my phone and my Mac.
+
+This supports the MAC-translation question below. Next step (project 13): open each wired client to compare the MAC the extender reports with the real MAC of each VM, and with what the Freebox sees.
+
 ## To watch next
 Some Wi-Fi extenders rewrite the MAC addresses of devices behind their Ethernet port. In **project 04**, I'll check that a VM on `vmbr0`, which has its own MAC, still gets a DHCP lease and internet access.
 
