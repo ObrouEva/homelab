@@ -39,6 +39,10 @@ This time the ISO goes straight from Ubuntu's servers to the Proxmox host (**loc
 
 ![Download from URL with SHA-256](screenshots/01-download-from-url-sha256.png)
 
+**Result:** task **OK** (13:22:23 → 13:26:52, ~4.5 min). The ISO is now in the library next to Debian's (2.73 GiB vs 756 MiB). Download speed was steady around **11 MB/s ≈ 90 Mbit/s**, much lower than the 440–560 Mbit/s Wi-Fi speed test at the desk: the Wi-Fi extender relays everything over the same radio (roughly halving throughput), and the remote mirror's speed matters too.
+
+![Download task OK](screenshots/02-download-task-ok.png)
+
 The release folder also contains `SHA256SUMS.gpg`: a **signature** of the hash list, proving it comes from Canonical (same idea as Debian's `.sign`).
 
 ## Problems & fixes
