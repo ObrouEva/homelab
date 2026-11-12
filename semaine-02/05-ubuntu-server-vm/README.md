@@ -159,6 +159,28 @@ My prediction was ~3.2 GiB (1.6 for Proxmox + 0.8 per VM, from project 04). Real
 
 ![Host free -h with both VMs](screenshots/09-host-free-two-vms.png)
 
+### Inside each VM (same hardware: 2 vCPU, 2 GiB, 20 GiB)
+
+```bash
+free -h            # RAM
+df -h /            # root filesystem
+uname -r           # kernel
+dpkg -l | wc -l    # installed packages (the pipe | sends the list into a line counter)
+```
+
+| Measure | Debian 13 `debian-01` | Ubuntu 26.04.1 `ubuntu-01` | Why |
+|---|---|---|---|
+| RAM **visible** to the OS | 1.9 GiB | **1.6 GiB** | Ubuntu enables **kdump** (crash dumps): the kernel reserves ~300 MB at boot (`crashkernel`) to capture a crash. That RAM is invisible to the OS |
+| Swap | 1.0 GiB **partition** (`swap_1` LV) | 1.6 GiB **file** (`/swap.img`) | Ubuntu prefers a swap file, which is easier to resize |
+| Root `/` size | 18 GB (whole VG) | **9.8 GB** (8 GB left free in the VG) | Ubuntu's guided LVM keeps space in reserve |
+| Root `/` used | **1.1 GB (7 %)** | **4.6 GB (50 %)** | Ubuntu ships much more by default (snapd, cloud-init, kdump, multipath, iscsi…) |
+| Installed packages | **~319** | **~722** | Minimal vs "batteries included" (`dpkg -l` includes ~5 header lines) |
+| Kernel | **6.12** (`6.12.116+deb13`) | **7.0** (`7.0.0-43-generic`) | Debian favours proven versions, Ubuntu newer ones |
+| Device-mapper name | `debian--01--vg-root` | `ubuntu--vg-ubuntu--lv` | The `-` in names is doubled in `/dev/mapper` to escape it |
+
+![Debian measurements](screenshots/10-debian-measures.png)
+![Ubuntu measurements](screenshots/11-ubuntu-measures.png)
+
 ## Problems & fixes
 | Problem | Cause | Fix / lesson |
 |---|---|---|
