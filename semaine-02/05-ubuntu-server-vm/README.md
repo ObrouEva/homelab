@@ -110,6 +110,19 @@ systemctl status qemu-guest-agent            # active (running)
 - **`sudo-rs`:** the prompt is `[sudo: authenticate] Password:` instead of Debian's `[sudo] password for eva:`. Ubuntu now ships **sudo rewritten in Rust** (memory-safe), removing a whole class of memory-corruption bugs from a security-critical binary.
 - **`hostnamectl`** also reveals the emulated hardware: `Hardware Model: Standard PC (i440FX + PIIX, 1996)`, the classic chipset Proxmox emulates by default for compatibility, and `Virtualization: kvm`.
 
+Then I fixed `/etc/hosts` and the timezone, **building the commands myself** from `--help` (read the left column = what to type; CAPITALS = values to replace):
+
+```bash
+cat /etc/hosts                                   # before
+sudo sed -i 's/ubuntu-06/ubuntu-01/' /etc/hosts  # no output = success
+cat /etc/hosts                                   # after: 127.0.1.1 ubuntu-01
+timedatectl                                      # before: Etc/UTC
+sudo timedatectl set-timezone Europe/Paris       # "europe/paris" would fail: Linux is case-sensitive
+timedatectl                                      # after: Local time 14:30 CET, Universal time unchanged
+```
+
+Only the **display** changed: `Universal time` and the NTP-synchronised clock stayed the same. After reconnecting, the prompt shows `eva@ubuntu-01`.
+
 Result: Proxmox now reads the VM's IPs through the agent. VM cost on the host: **1.37 GiB** for 824 MiB used inside the guest.
 
 ![Summary with Guest Agent (IPs blurred)](screenshots/07-summary-guest-agent.png)
@@ -120,5 +133,6 @@ Result: Proxmox now reads the VM's IPs through the agent. VM cost on the host: *
 | The ISO also started downloading **on my Mac** | I clicked the ISO link on the Ubuntu page | Cancelled it. Proxmox downloads its own copy; only the hash needs to be copied from the site |
 | Typed `SHA256SUMS` in the Checksum field | Confused the **name** of the hash list with the **hash** itself | Opened `SHA256SUMS` and copied the 64-character hex string. Caught before downloading 2.7 GB for nothing |
 | Wizard showed Qemu Agent ❌, disk **32 GiB**, Discard ❌, SSD ❌, **1 core** | I assumed the wizard **remembered my Debian settings**. It doesn't: every new VM starts from Proxmox defaults | Went back through each tab and fixed 5 values before Finish. Lesson: manual setup drifts. That's why admins use **templates** and **automation** (Terraform, Phase 4) |
+| Typed `europe/paris` | Linux paths and names are **case-sensitive** (zones are files under `/usr/share/zoneinfo/Europe/Paris`) | `Europe/Paris` |
 | Hostname came out as **`ubuntu-06`** instead of `ubuntu-01` | AZERTY again: on a **PC** AZERTY layout, digits need Shift, and the `6` key types `-`, so one key press landed on the wrong character in the console | Fixed after install over SSH (`hostnamectl`), from the Mac keyboard. Unlike Debian, the VG name doesn't depend on the hostname (`ubuntu-vg`), so the fix is easy |
 | Two `live-server` lines in `SHA256SUMS` | The folder holds **26.04** (April) and **26.04.1** (August) | Took the `26.04.1` line, matching the file I'm downloading, and copied it from the official page myself, never from a third party |
