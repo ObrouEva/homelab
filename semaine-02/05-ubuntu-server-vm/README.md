@@ -142,6 +142,23 @@ Same `apt` commands as Debian (the shared family), but Ubuntu adds its own behav
 ![autoremove of the old kernel](screenshots/08-autoremove-old-kernel.png)
 
 
+## Comparison: Debian vs Ubuntu side by side
+
+### Resource cost on the host (both VMs running)
+
+| | `debian-01` | `ubuntu-01` |
+|---|---|---|
+| Uptime at measurement | 54 s (just booted) | 55 min (after installs + 48 upgrades) |
+| RAM used **inside** the guest | 164 MiB | 1.09 GiB |
+| RAM taken **on the host** | 302 MiB | **1.91 GiB** |
+
+Host `free -h` with both running: **used 4.0 GiB / 7.6 GiB, available 3.6 GiB**, swap 12 KiB (negligible), KSM 0 B.
+My prediction was ~3.2 GiB (1.6 for Proxmox + 0.8 per VM, from project 04). Reality was **4.0 GiB**.
+
+**What I learned:** a VM's host memory isn't fixed. It grows with what the guest has **touched**: Ubuntu filled its RAM with page cache while downloading and installing updates, and that memory stays allocated to the VM. Since ballooning has min = max, Proxmox never takes it back. So a fair comparison needs both VMs in the **same state** (same uptime, same workload). The real planning rule: **budget each VM at its full RAM size**, which is what the roadmap assumes.
+
+![Host free -h with both VMs](screenshots/09-host-free-two-vms.png)
+
 ## Problems & fixes
 | Problem | Cause | Fix / lesson |
 |---|---|---|
