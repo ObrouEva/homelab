@@ -56,9 +56,15 @@ This time the ISO goes straight from Ubuntu's servers to the Proxmox host (**loc
 
 The release folder also contains `SHA256SUMS.gpg`: a **signature** of the hash list, proving it comes from Canonical (same idea as Debian's `.sign`).
 
+### 2. Create VM 101 `ubuntu-01` (same specs as `debian-01`)
+Same hardware as the Debian VM, so the comparison is fair: 2 vCPU, 2 GiB RAM, 20 GiB disk (Discard + SSD emulation + IO thread), VirtIO NIC on `vmbr0`, Qemu Agent on.
+
+![VM 101 configuration](screenshots/03-vm-config-confirm.png)
+
 ## Problems & fixes
 | Problem | Cause | Fix / lesson |
 |---|---|---|
 | The ISO also started downloading **on my Mac** | I clicked the ISO link on the Ubuntu page | Cancelled it. Proxmox downloads its own copy; only the hash needs to be copied from the site |
 | Typed `SHA256SUMS` in the Checksum field | Confused the **name** of the hash list with the **hash** itself | Opened `SHA256SUMS` and copied the 64-character hex string. Caught before downloading 2.7 GB for nothing |
+| Wizard showed Qemu Agent ❌, disk **32 GiB**, Discard ❌, SSD ❌, **1 core** | I assumed the wizard **remembered my Debian settings**. It doesn't: every new VM starts from Proxmox defaults | Went back through each tab and fixed 5 values before Finish. Lesson: manual setup drifts. That's why admins use **templates** and **automation** (Terraform, Phase 4) |
 | Two `live-server` lines in `SHA256SUMS` | The folder holds **26.04** (April) and **26.04.1** (August) | Took the `26.04.1` line, matching the file I'm downloading, and copied it from the official page myself, never from a third party |
