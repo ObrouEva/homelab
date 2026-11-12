@@ -123,6 +123,20 @@ timedatectl                                      # after: Local time 14:30 CET, 
 
 Only the **display** changed: `Universal time` and the NTP-synchronised clock stayed the same. After reconnecting, the prompt shows `eva@ubuntu-01`.
 
+### 6. Updates
+```bash
+sudo apt update && sudo apt full-upgrade   # 48 packages upgraded
+sudo apt autoremove                        # 7 old kernel 7.0.0-30 packages removed, 319 MB freed
+```
+Same `apt` commands as Debian (the shared family), but Ubuntu adds its own behaviour on top:
+- **Phased updates:** `Not upgrading yet due to phasing` means Canonical rolls some updates out to a percentage of machines first, to catch bugs before everyone gets them.
+- **needrestart:** after upgrading, Ubuntu **automatically restarted** the services using updated libraries (`ssh`, `cron`, `qemu-guest-agent`…) and listed sessions still running old binaries.
+- **unattended-upgrades** is present and enabled: Ubuntu installs **security updates automatically** by default. Debian doesn't. On a server that's a trade-off between being patched quickly and controlling exactly when things change.
+- `autoremove` removed the ISO's original kernel (`-30`) because `-43` is now installed; `/boot/vmlinuz.old` now points to `-43`.
+- The `File descriptor 3 … leaked on vgs invocation` lines are a harmless warning from GRUB's disk probe talking to LVM.
+
+![autoremove of the old kernel](screenshots/08-autoremove-old-kernel.png)
+
 Result: Proxmox now reads the VM's IPs through the agent. VM cost on the host: **1.37 GiB** for 824 MiB used inside the guest.
 
 ![Summary with Guest Agent (IPs blurred)](screenshots/07-summary-guest-agent.png)
