@@ -83,6 +83,14 @@ Ubuntu deliberately leaves part of the volume group unallocated, so the admin ca
 
 ![Ubuntu storage summary](screenshots/05-storage-summary.png)
 
+- **Profile:** name `ubuntu-01`, user `eva`, with a **different password from `debian-01`** (no reuse: if one machine is compromised, the password can't be replayed on the other, which is lateral movement).
+- **Ubuntu Pro:** skipped (free for personal use on 5 machines, but ties the VM to an online account; can be enabled later with `sudo pro attach`). Debian has no commercial layer like this.
+- **SSH:** `[X] Install OpenSSH server` ticked with **Space** (unticked by default). Password authentication allowed for now, until SSH keys in project 10.
+- **Featured snaps:** none selected. Only install what the server needs.
+- **Install log:** `acquiring and extracting image from cp:///tmp/.../mount` confirms the installer **copies a pre-built system image** instead of installing package by package; `setting up swap` creates a swap **file**; `downloading and installing security updates` patches the system before first boot.
+
+![Installation complete](screenshots/06-install-complete.png)
+
 ## Problems & fixes
 | Problem | Cause | Fix / lesson |
 |---|---|---|
