@@ -22,7 +22,18 @@ Why both matter for my goal: Debian is under my hypervisor; Ubuntu is what I'll 
 ## Prediction before starting
 > The Ubuntu Server ISO is **2.7 GB**, the Debian netinst was **756 MB**. Why ~4× bigger?
 
-_My answer and the real reason will be added here._
+**My guess:** the two installs work differently. Ubuntu's is more of a "live" system, and they don't use the network the same way (the Debian install felt longer because it kept downloading).
+
+**The real reason:** that was the right intuition.
+
+| | Debian **netinst** (756 MB) | Ubuntu **live-server** (2.7 GB) |
+|---|---|---|
+| What's on the ISO | A small installer + just enough to start | A **complete, ready-made Ubuntu system** that boots ("live") and runs the installer from inside it |
+| Where the packages come from | **Downloaded from the internet during the install** ("net" install) | Already on the ISO: the installer **copies the pre-built system** onto the disk |
+| Without internet | Very limited install | Works offline, updates fetched afterwards |
+| Trade-off | Small download, longer install, always up to date | Big download, faster and more predictable install |
+
+So the size difference isn't about Ubuntu being "heavier" once installed. It's about **where the work happens**: before (Ubuntu ships everything in the ISO) or during the install (Debian fetches it). My Debian install took longer partly because of that, and partly because of my GNOME mistake (1,379 packages downloaded through the Wi-Fi extender).
 
 ## Steps
 
