@@ -25,7 +25,25 @@ Why both matter for my goal: Debian is under my hypervisor; Ubuntu is what I'll 
 _My answer and the real reason will be added here._
 
 ## Steps
-_Added as I go._
+
+### 1. Download the ISO directly on Proxmox (with checksum)
+This time the ISO goes straight from Ubuntu's servers to the Proxmox host (**local → ISO Images → Download from URL**), instead of Mac → upload. The 2.7 GB never pass through my laptop.
+
+| Field | Value | Why |
+|---|---|---|
+| URL | `https://releases.ubuntu.com/26.04.1/ubuntu-26.04.1-live-server-amd64.iso` | Official source, HTTPS |
+| Query URL | file name + **2.73 GiB**, MIME `application/x-iso9660-image` | Proxmox checks the link works and that it's really a disc image |
+| Hash algorithm | **SHA-256** | |
+| Checksum | the 64-hex hash from the official `SHA256SUMS`, line `ubuntu-26.04.1-live-server-amd64.iso` | Proxmox refuses to keep the file if the hash doesn't match |
+| Verify certificates | ✅ | Makes sure I'm really talking to `releases.ubuntu.com` |
+
+![Download from URL with SHA-256](screenshots/01-download-from-url-sha256.png)
+
+The release folder also contains `SHA256SUMS.gpg`: a **signature** of the hash list, proving it comes from Canonical (same idea as Debian's `.sign`).
 
 ## Problems & fixes
-_Added as I go._
+| Problem | Cause | Fix / lesson |
+|---|---|---|
+| The ISO also started downloading **on my Mac** | I clicked the ISO link on the Ubuntu page | Cancelled it. Proxmox downloads its own copy; only the hash needs to be copied from the site |
+| Typed `SHA256SUMS` in the Checksum field | Confused the **name** of the hash list with the **hash** itself | Opened `SHA256SUMS` and copied the 64-character hex string. Caught before downloading 2.7 GB for nothing |
+| Two `live-server` lines in `SHA256SUMS` | The folder holds **26.04** (April) and **26.04.1** (August) | Took the `26.04.1` line, matching the file I'm downloading, and copied it from the official page myself, never from a third party |
