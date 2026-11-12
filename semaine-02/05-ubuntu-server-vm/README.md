@@ -96,6 +96,24 @@ Ubuntu deliberately leaves part of the volume group unallocated, so the admin ca
 - At first boot, **cloud-init** generates the SSH host keys (RSA, ECDSA, ED25519) and prints their fingerprints on the console, the reference to compare against at the first SSH connection.
 - The login banner (MOTD) already shows a lot: `/` used at **50.6 % of 9.75 GB** (confirms the small root volume), **45 updates** available, an Ubuntu Pro/ESM reminder, the IPv4/IPv6 addresses, and times in **UTC**: the installer never asked for a timezone, unlike Debian's.
 
+### 5. Post-install fixes over SSH (live, no reboot)
+SSH from the Mac; the host-key fingerprint matched the ED25519 one printed by cloud-init on the console.
+
+```bash
+sudo hostnamectl set-hostname ubuntu-01      # fix the AZERTY typo
+sudo apt install qemu-guest-agent            # Ubuntu Server doesn't install it (Debian did)
+sudo systemctl start qemu-guest-agent
+systemctl status qemu-guest-agent            # active (running)
+```
+
+- **Guest Agent:** Proxmox showed *"Guest Agent not running"* even though `agent: 1` was set. That option only creates the **channel on the host side**; a program must answer **inside** the guest. Debian's installer added it automatically, Ubuntu's didn't. After the install, the unit shows as `static`: it isn't "enabled", it's started automatically when the virtio channel appears, so it survives reboots.
+- **`sudo-rs`:** the prompt is `[sudo: authenticate] Password:` instead of Debian's `[sudo] password for eva:`. Ubuntu now ships **sudo rewritten in Rust** (memory-safe), removing a whole class of memory-corruption bugs from a security-critical binary.
+- **`hostnamectl`** also reveals the emulated hardware: `Hardware Model: Standard PC (i440FX + PIIX, 1996)`, the classic chipset Proxmox emulates by default for compatibility, and `Virtualization: kvm`.
+
+Result: Proxmox now reads the VM's IPs through the agent. VM cost on the host: **1.37 GiB** for 824 MiB used inside the guest.
+
+![Summary with Guest Agent (IPs blurred)](screenshots/07-summary-guest-agent.png)
+
 ## Problems & fixes
 | Problem | Cause | Fix / lesson |
 |---|---|---|
