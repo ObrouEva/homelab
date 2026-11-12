@@ -26,6 +26,7 @@ flowchart LR
     Box -. Wi-Fi .- RE[Wi-Fi extender<br/>TP-Link RE330]
     RE --- PVE[Proxmox VE host<br/>pve.homelab.lan<br/>192.168.1.X]
     PVE --- VM1[VM 100 · debian-01<br/>Debian 13 server]
+    PVE --- VM2[VM 101 · ubuntu-01<br/>Ubuntu 26.04 server]
     Box -. Wi-Fi .- Mac[MacBook Air M3<br/>admin workstation]
     Mac -- "HTTPS :8006" --> PVE
 ```
@@ -39,8 +40,8 @@ flowchart LR
 | Week | Projects | Status |
 |---|---|---|
 | [01 — Know your server & Proxmox](semaine-01/) | 01 Hardware inventory · 02 Proxmox install · 03 Proxmox administration · 03b Server relocation | ✅ Done |
-| [02 — Virtual machines](semaine-02/) | 04 Debian VM ✅ · 05 Second Linux VM · 06 Snapshots ✅ | 🔄 In progress |
-| 03 — Linux command line | 07 File structure · 08 Users & permissions · 09 First Bash script | 🔜 |
+| [02 — Virtual machines](semaine-02/) | 04 Debian VM ✅ · 05 Second Linux VM ✅ · 06 Snapshots ✅ | ✅ Done |
+| 03 — Linux command line | 07 File structure · 08 Users & permissions · 09 First Bash script | ⏳ Next |
 | 04 — Remote administration | 10 SSH keys · 11 Services & logs · 12 Automated maintenance | 🔜 |
 | 05 — Linux networking | 13 Network map · 14 VM-to-VM · 15 Isolated network | 🔜 |
 | 06 — Hosting services | 16 Nginx · 17 LXC container · 18 Linux firewall | 🔜 |

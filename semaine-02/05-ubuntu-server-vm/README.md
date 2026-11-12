@@ -1,6 +1,6 @@
 # 05 — Second Linux VM: Ubuntu Server (and how it differs from Debian)
 
-> 🚧 **In progress.** This README is written step by step during the project, mistakes included.
+> Written step by step during the project, mistakes included.
 
 ## Objective
 Install **Ubuntu Server 26.04.1 LTS** as a second VM next to `debian-01`, then **compare the two distributions**: installer, defaults, resource usage and philosophy. The goal isn't just "I installed Ubuntu", but understanding why a company would choose one or the other.
@@ -190,3 +190,28 @@ dpkg -l | wc -l    # installed packages (the pipe | sends the list into a line c
 | Typed `europe/paris` | Linux paths and names are **case-sensitive** (zones are files under `/usr/share/zoneinfo/Europe/Paris`) | `Europe/Paris` |
 | Hostname came out as **`ubuntu-06`** instead of `ubuntu-01` | AZERTY again: on a **PC** AZERTY layout, digits need Shift, and the `6` key types `-`, so one key press landed on the wrong character in the console | Fixed after install over SSH (`hostnamectl`), from the Mac keyboard. Unlike Debian, the VG name doesn't depend on the hostname (`ubuntu-vg`), so the fix is easy |
 | Two `live-server` lines in `SHA256SUMS` | The folder holds **26.04** (April) and **26.04.1** (August) | Took the `26.04.1` line, matching the file I'm downloading, and copied it from the official page myself, never from a third party |
+
+## Security notes
+- 🔐 Different password from `debian-01`: no reuse, so one compromised VM can't be used to log into the other (lateral movement).
+- 🔐 SSH host-key fingerprint checked against the one printed by cloud-init on the console before typing `yes`.
+- 🔐 `Last login: … from 192.168.1.X` showed an unfamiliar address. I **verified** it instead of assuming: it was my own Mac, which had received a new DHCP lease (`ipconfig getifaddr en0`). Correlating an IP and a time with a known device is basic incident analysis.
+- 🔐 Ubuntu ships `sudo-rs` (memory-safe Rust rewrite) and enables `unattended-upgrades` (automatic security patches): faster patching, less control over *when* changes happen.
+- 🔐 No featured snaps and no Ubuntu Pro: install only what the server needs, which keeps the attack surface small.
+- 🔐 Public IPv6 addresses and private IPs blurred in screenshots.
+
+## To do next session
+- Extend Ubuntu's root volume **live** with LVM (`lvextend -r`) into the 8 GB left free in `ubuntu-vg`.
+
+## Result
+✅ `ubuntu-01` (VM 101) runs Ubuntu Server 26.04.1 LTS next to `debian-01`, on identical virtual hardware. The comparison showed concretely how the same family (Debian → Ubuntu) makes different choices:
+
+| | Debian | Ubuntu |
+|---|---|---|
+| Philosophy | Minimal, stable, "you decide" | Batteries included, newer, opinionated defaults |
+| Installer | Classic d-i, netinst (downloads packages) | Subiquity, live-server (copies a ready-made image) |
+| Footprint | ~319 packages, 1.1 GB on `/` | ~722 packages, 4.6 GB on `/` |
+| Kernel | 6.12 | 7.0 |
+| Defaults I had to fix | (wizard settings) | Keyboard, timezone, Guest Agent, hostname typo |
+| Extras | None | Snaps, cloud-init, kdump, Ubuntu Pro, unattended-upgrades, phased updates, needrestart, sudo-rs |
+
+**When I'd choose which:** Debian for a lean, long-lived service where I want control (that's why Proxmox is built on it). Ubuntu when I want current kernels/tooling and the same OS I'll find in the public cloud (Phase 4).
