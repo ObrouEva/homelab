@@ -141,6 +141,37 @@ Same `apt` commands as Debian (the shared family), but Ubuntu adds its own behav
 
 ![autoremove of the old kernel](screenshots/08-autoremove-old-kernel.png)
 
+### 7. Grow the root filesystem live with LVM (next session)
+The installer gave `/` only **10 GB** of an **18.22 GB** volume group and left the rest unallocated. Ubuntu does this on purpose, so the admin decides later where the space goes. With `/` already 50 % full, I gave all of it to `/`, **live, without a reboot**.
+
+**The layers (bottom → top):** virtual disk `/dev/sda` → partition `sda3` → **PV** (partition marked for LVM) → **VG** `ubuntu-vg` (the pool, 18.22 GB) → **LV** `ubuntu-lv` (a 10 GB slice) → **ext4 filesystem** (what `df` shows). Growing `/` means growing **two** layers: the LV *and* the filesystem inside it.
+
+```bash
+df -h /          # filesystem layer: 9.8G, 50 % used
+sudo vgs         # pool layer: VSize 18.22g, VFree 8.22g  ← the unused space
+sudo lvextend -r -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+df -h /          # 18G, 28 % used
+sudo vgs         # VFree 0
+```
+
+| Part | Meaning |
+|---|---|
+| `lvextend` | make a logical volume bigger |
+| `-l +100%FREE` | add 100 % of the VG's free **extents** (LVM counts in 4 MiB blocks: 10 GiB = 2560 extents → 18.22 GiB = 4665) |
+| `-r` | **r**esize the filesystem too (runs `resize2fs`). Without it the LV grows but `df` still shows 9.8G |
+| `/dev/ubuntu-vg/ubuntu-lv` | which LV: group `ubuntu-vg`, volume `ubuntu-lv` |
+
+| | Before | After |
+|---|---|---|
+| `/` size | 9.8G | **18G** |
+| Used | 4.6G | 4.6G |
+| Use% | 50 % | **28 %** (predicted ~27 %) |
+| VFree | 8.22g | **0** |
+
+`resize2fs` reported `on-line resizing required`: the filesystem grew **while mounted and in use**. That's what LVM is for. In production nobody reinstalls a server that runs out of space: you add capacity to the pool and extend live.
+
+![lvextend -r: / grows from 9.8G to 18G live](screenshots/12-lvextend-live.png)
+
 
 ## Comparison: Debian vs Ubuntu side by side
 
@@ -172,7 +203,7 @@ dpkg -l | wc -l    # installed packages (the pipe | sends the list into a line c
 |---|---|---|---|
 | RAM **visible** to the OS | 1.9 GiB | **1.6 GiB** | Ubuntu enables **kdump** (crash dumps): the kernel reserves ~300 MB at boot (`crashkernel`) to capture a crash. That RAM is invisible to the OS |
 | Swap | 1.0 GiB **partition** (`swap_1` LV) | 1.6 GiB **file** (`/swap.img`) | Ubuntu prefers a swap file, which is easier to resize |
-| Root `/` size | 18 GB (whole VG) | **9.8 GB** (8 GB left free in the VG) | Ubuntu's guided LVM keeps space in reserve |
+| Root `/` size | 18 GB (whole VG) | **9.8 GB** (8 GB left free in the VG), **18 GB after step 7** | Ubuntu's guided LVM keeps space in reserve |
 | Root `/` used | **1.1 GB (7 %)** | **4.6 GB (50 %)** | Ubuntu ships much more by default (snapd, cloud-init, kdump, multipath, iscsi…) |
 | Installed packages | **~319** | **~722** | Minimal vs "batteries included" (`dpkg -l` includes ~5 header lines) |
 | Kernel | **6.12** (`6.12.116+deb13`) | **7.0** (`7.0.0-43-generic`) | Debian favours proven versions, Ubuntu newer ones |
@@ -190,6 +221,9 @@ dpkg -l | wc -l    # installed packages (the pipe | sends the list into a line c
 | Typed `europe/paris` | Linux paths and names are **case-sensitive** (zones are files under `/usr/share/zoneinfo/Europe/Paris`) | `Europe/Paris` |
 | Hostname came out as **`ubuntu-06`** instead of `ubuntu-01` | AZERTY again: on a **PC** AZERTY layout, digits need Shift, and the `6` key types `-`, so one key press landed on the wrong character in the console | Fixed after install over SSH (`hostnamectl`), from the Mac keyboard. Unlike Debian, the VG name doesn't depend on the hostname (`ubuntu-vg`), so the fix is easy |
 | Two `live-server` lines in `SHA256SUMS` | The folder holds **26.04** (April) and **26.04.1** (August) | Took the `26.04.1` line, matching the file I'm downloading, and copied it from the official page myself, never from a third party |
+| `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!` when SSHing to `ubuntu-01` | DHCP had moved the VM to an IP my Mac had previously stored **another machine's** host key for (`ubuntu-01` had a different IP on Thursday; its new IP had been the Mac's own address back then) | Didn't just delete the key. Read the real fingerprint **from the Proxmox console** (out-of-band, can't be tampered with over the network) with `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`, confirmed it matched, **then** `ssh-keygen -R <IP>` and reconnected. Root cause = changing IPs → fixed IPs planned for project 13 |
+| `No such file or directory` on the key | Typed `/etc/ssh_host_…`, missing the `ssh/` folder | `/etc/ssh/ssh_host_ed25519_key.pub`. Use **Tab completion** for paths |
+| `Bad remote forwarding specification` | Typed `ssh keygen -R` (space): that runs **`ssh`**, where `-R` means remote port forwarding | `ssh-keygen -R` (hyphen). A flag only means something together with its program |
 
 ## Security notes
 - 🔐 Different password from `debian-01`: no reuse, so one compromised VM can't be used to log into the other (lateral movement).
@@ -198,9 +232,8 @@ dpkg -l | wc -l    # installed packages (the pipe | sends the list into a line c
 - 🔐 Ubuntu ships `sudo-rs` (memory-safe Rust rewrite) and enables `unattended-upgrades` (automatic security patches): faster patching, less control over *when* changes happen.
 - 🔐 No featured snaps and no Ubuntu Pro: install only what the server needs, which keeps the attack surface small.
 - 🔐 Public IPv6 addresses and private IPs blurred in screenshots.
-
-## To do next session
-- Extend Ubuntu's root volume **live** with LVM (`lvextend -r`) into the 8 GB left free in `ubuntu-vg`.
+- 🔐 A changed SSH host key is treated as a **possible man-in-the-middle** until proven otherwise: verified out-of-band (Proxmox console) before trusting the new key. Fingerprints are never published.
+- 🔐 Side finding: the host key's comment still says `root@ubuntu-06`. Keys are generated at install time, so `hostnamectl` renames the machine but not labels written before. Harmless, but a reminder that a machine keeps traces of its history.
 
 ## Result
 ✅ `ubuntu-01` (VM 101) runs Ubuntu Server 26.04.1 LTS next to `debian-01`, on identical virtual hardware. The comparison showed concretely how the same family (Debian → Ubuntu) makes different choices:
