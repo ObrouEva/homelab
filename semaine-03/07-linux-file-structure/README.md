@@ -30,6 +30,42 @@ _(to fill in)_
 ### 1. Explore the real tree on `debian-01`
 ```bash
 ls /                 # names only
+ls -l /etc | less    # details, one page at a time (q = quit, /word = search)
+ls -l /              # details of the top of the tree
+```
+
+**How to read one `ls -l` line:**
+```
+-rw-r--r-- 1 root root 211 Nov 10 15:27 hosts
+│└──┬────┘   └──┬───┘  │   └────┬─────┘ └ name
+│   │           │      │        └ last modified (= the day I installed debian-01)
+│   │           │      └ size in bytes
+│   │           └ owner and group
+│   └ permissions (project 08)
+└ type: - file · d directory · l link (shortcut)
+```
+
+**What `ls -l /` revealed:**
+
+| Entry | What I saw | What it means |
+|---|---|---|
+| `bin`, `sbin`, `lib`, `lib64` | `l` + `-> usr/bin`, `-> usr/sbin`… | Not real folders: **symbolic links** kept for old scripts. The real programs live in `/usr` (Debian's "merged /usr") |
+| link sizes 7, 8, 9 | `bin -> usr/bin` = **7** | A symlink is a tiny file holding an **address**; its size is the length of that text (`usr/bin` = 7 characters) |
+| `vmlinuz` / `vmlinuz.old` | `-> boot/vmlinuz-6.12.116…` / `-> …6.12.107…` | The **current kernel** and the **previous one**, kept as a fallback if a new kernel fails to boot. Same for `initrd.img` |
+| `proc`, `sys` | size **0**, dated at the last boot | **Virtual** folders created in memory by the kernel: nothing on disk |
+| `root`, `lost+found` | `drwx------` | Only root can enter |
+| `tmp` | `drwxrwxrwt` | Everyone can write, but the final **`t`** (sticky bit) means you can only delete **your own** files (project 08) |
+| `/etc/gshadow`, `/etc/credstore` | `-rw-r-----` / `drwx------` | Unlike most of `/etc` (readable by all), files holding **secrets** are locked down by permissions |
+
+![ls -l / on debian-01](screenshots/01-ls-l-root.png)
+
+🕵️ **Side finding:** `proc`, `sys` and `dev` were dated **Tue 03:39** while I logged in on **Friday**. That's the VM's boot time, so `debian-01` had been running for **3 days** after I forgot to shut it down, holding 2 GiB of the host's 8 GB. The filesystem itself told me. Lesson: always `exit` + **Shutdown** at the end of a session.
+
+## Steps
+
+### 1. Explore the real tree on `debian-01`
+```bash
+ls /                 # names only
 ls -l /etc | less    # long format, page by page (q = quit, /word = search)
 ls -l /              # long format of the root: reveals types and shortcuts
 ```
